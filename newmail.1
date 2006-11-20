@@ -1,0 +1,76 @@
+.TH newmail 1 "18 November 2006"
+.SH NAME
+newmail \- count unread mails in a Maildir++ directory structure
+
+.SH SYNOPSIS
+\fBnewmail\fR [\fIOPTION\fR]... [\fIDIRECTORY\fR]
+
+.SH DESCRIPTION
+For the Maildir++ structure \fIDIRECTORY\fR ($HOME/Maildir by default),
+\fBnewmail\fR lists all folders containing unread mail alphabetically
+as well as the number of unread mails.
+
+.SH OPTIONS
+.IP "\fB-a, --all\fR"
+Count the total number of mails for every folder in \fIDIRECTORY\fR.
+
+.IP "\fB-m, --mutt\fR"
+Output folder names in a \fBmutt\fR(1) friendly way. Using this option the
+output of \fBnewmail\fR can be used by the mailboxes command in mutt
+(see below).
+
+This options has no effect, if \fB--total\fR is specified.
+
+.IP "\fB-n, --no-unseen\fR"
+Do not treat unseen mails as new. This may be used to speed up \fBnewmail\fR,
+especially on slow file systems. Only use this option if you are sure that no
+other process watches the structure and moves mails out of the \fInew/\fR to
+the \fIcur/\fR directory of the mail folders. IMAP servers typically do this,
+once they told clients about those mails.
+
+This options has no effect, if \fB--all\fR is specified.
+
+.IP "\fB-t, --total\fR"
+Sum up the total number of mails (according to the other options, of course)
+and display nothing but this number.
+
+
+.SH EXAMPLES
+To get a quick overview about which folders contain unread mail,
+it's sufficient to call \fBnewmail\fR without any commandline arguments:
+
+.nf
+$ newmail
+.br
+   2 [ INBOX ]
+.br
+  11 /lists/bugtraq
+.br
+   2 /lists/netbsd-current
+.br
+   4 /lists/pkgsrc-cvs
+.fi
+
+The following three lines in your \fI.muttrc\fR make mutt's browser
+switch between showing all folders and only folders containing unread
+mail by pressing keys `a' and `n' respectively:
+
+.nf
+mailboxes \`newmail\`
+.br
+macro browser a ":unmailboxes *<enter>:mailboxes \\\`newmail -am\\\`<enter><check-new>"\\
+.br
+                "show all mailboxes"
+.br
+macro browser n ":mailboxes *<enter>:mailboxes \\\`newmail -m\\\`<enter><check-new>"\\
+.br
+                "show only mailboxes containing new mail"
+.nf
+
+.SH "SEE ALSO"
+.BR mutt (1),
+.BR dovecot (1)
+
+.SH AUTHOR
+Written by Robert Lillack <rob@burningsoda.com>
+
